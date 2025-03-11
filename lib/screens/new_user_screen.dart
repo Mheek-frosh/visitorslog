@@ -54,7 +54,7 @@ class _NewUserScreenState extends State<NewUserScreen> {
       body: BlocListener<UserBloc, UserState>(
         listener: (context, state) {
           if (state is ImageCapturedState) {
-            _showImagePreview(context, state.imagePath); // Show preview before saving
+            _showImagePreview(context, state.imagePath); // Show preview before save
           }
         },
         child: Padding(

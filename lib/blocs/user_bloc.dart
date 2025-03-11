@@ -19,7 +19,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
 
     on<SaveUserDetailsEvent>((event, emit) async {
-      // Simulate saving user details (you can replace with actual logic)
+      // user details (you can replace with actual logic)
       await Future.delayed(Duration(seconds: 1));
       emit(UserSavedState());
     });

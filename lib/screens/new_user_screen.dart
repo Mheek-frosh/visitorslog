@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/user_bloc.dart';
 import '../blocs/user_event.dart';
 import '../blocs/user_state.dart';
+import 'more_questions_screen.dart';
 
 class NewUserScreen extends StatefulWidget {
   @override
@@ -23,23 +25,23 @@ class _NewUserScreenState extends State<NewUserScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Image Preview"),
+          title: const Text("Image Preview"),
           content: Image.file(File(path), fit: BoxFit.cover),
           actions: [
             TextButton(
               onPressed: () {
-                context.read<UserBloc>().add(CaptureImageEvent()); // Retake image
+                context.read<UserBloc>().add(CaptureImageEvent());
               },
-              child: Text("Retake"),
+              child: const Text("Retake"),
             ),
             TextButton(
               onPressed: () {
                 setState(() {
-                  imagePath = path; // Save captured image
+                  imagePath = path;
                 });
                 Navigator.pop(context);
               },
-              child: Text("Use Photo"),
+              child: const Text("Use Photo"),
             ),
           ],
         );
@@ -50,116 +52,115 @@ class _NewUserScreenState extends State<NewUserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("New User Registration")),
-      body: BlocListener<UserBloc, UserState>(
-        listener: (context, state) {
-          if (state is ImageCapturedState) {
-            _showImagePreview(context, state.imagePath); // Show preview before save
-          }
-        },
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildTextField(fullNameController, "Full Name", Icons.person),
-                _buildTextField(companyController, "Company Name", Icons.business),
-                _buildTextField(addressController, "Company Address", Icons.location_on),
-                _buildTextField(emailController, "Email Address", Icons.email),
-                _buildTextField(phoneController, "Phone Number", Icons.phone, TextInputType.phone),
-                SizedBox(height: 20),
-
-                // Rectangular Camera Capture Container
-                Stack(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        context.read<UserBloc>().add(CaptureImageEvent());
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.blue, width: 2),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: imagePath == null
-                              ? Center(
-                            child: Icon(Icons.camera_alt, size: 50, color: Colors.grey),
-                          )
-                              : Image.file(File(imagePath!), fit: BoxFit.cover),
-                        ),
-                      ),
-                    ),
-
-                    // Retake Button
-                    if (imagePath != null)
-                      Positioned(
-                        top: 10,
-                        right: 10,
-                        child: Row(
-                          children: [
-                            Icon(Icons.refresh, color: Colors.blue),
-                            SizedBox(width: 5),
-                            GestureDetector(
-                              onTap: () {
-                                context.read<UserBloc>().add(CaptureImageEvent());
-                              },
-                              child: Text("Retake", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
-
-                SizedBox(height: 20),
-
-                // Continue Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      context.read<UserBloc>().add(
-                        SaveUserDetailsEvent(
-                          fullName: fullNameController.text,
-                          companyName: companyController.text,
-                          companyAddress: addressController.text,
-                          email: emailController.text,
-                          phone: phoneController.text,
-                          imagePath: imagePath ?? "",
-                        ),
-                      );
-                    },
-                    child: Text("Continue", style: TextStyle(fontSize: 18)),
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                    ),
+      appBar: AppBar(
+        backgroundColor: Colors.green[400],
+        centerTitle: true,
+        title: const Text(
+          "New User Registration",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        leading: IconButton(
+          icon: const Icon(CupertinoIcons.back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Icon(Icons.person, size: 100, color: Colors.green),
+            _buildTextField(fullNameController, "Full Name", Icons.person),
+            _buildTextField(companyController, "Company Name", Icons.business),
+            _buildTextField(addressController, "Company Address", Icons.location_on),
+            _buildTextField(emailController, "Email Address", Icons.email),
+            _buildTextField(phoneController, "Phone Number", Icons.phone, TextInputType.phone),
+            const SizedBox(height: 16),
+            _buildImageCaptureContainer(),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                context.read<UserBloc>().add(
+                  SaveUserDetailsEvent(
+                    fullName: fullNameController.text,
+                    companyName: companyController.text,
+                    companyAddress: addressController.text,
+                    email: emailController.text,
+                    phone: phoneController.text,
+                    imagePath: imagePath ?? "",
                   ),
-                ),
-              ],
+                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MoreQuestionsScreen()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green[400],
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+              child: const Text(
+                "Continue",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
             ),
+          ],
+        ),
+      ),
+      backgroundColor: Colors.grey[200],
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label, IconData icon, [TextInputType? inputType]) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: TextField(
+        controller: controller,
+        keyboardType: inputType ?? TextInputType.text,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Icon(icon, color: Colors.green[400]),
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide.none,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label, IconData icon, [TextInputType? inputType]) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: SizedBox(
-        height: 55,
-        child: TextField(
-          controller: controller,
-          keyboardType: inputType ?? TextInputType.text,
-          decoration: InputDecoration(
-            labelText: label,
-            prefixIcon: Icon(icon),
-            border: OutlineInputBorder(),
+  Widget _buildImageCaptureContainer() {
+    return GestureDetector(
+      onTap: () {
+        context.read<UserBloc>().add(CaptureImageEvent());
+      },
+      child: Container(
+        height: 200,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.green, width: 2),
+        ),
+        child: imagePath == null
+            ? const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(CupertinoIcons.camera, size: 50, color: Colors.green),
+              SizedBox(height: 10),
+              Text(
+                "Tap to Capture Image",
+                style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
+        )
+            : ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.file(File(imagePath!), fit: BoxFit.cover),
         ),
       ),
     );

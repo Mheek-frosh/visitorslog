@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:visitorslog/screens/verified_exisiting_user.dart';
+import 'package:visitorslog/screens/user_checkout.dart';
+import 'package:visitorslog/screens/welcome_screen.dart';
 
-class ExistingUserScreen extends StatelessWidget {
-  const ExistingUserScreen({super.key});
+class CheckOutScreen extends StatelessWidget {
+  const CheckOutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class ExistingUserScreen extends StatelessWidget {
         ),
         centerTitle: true,
         title: const Text(
-          "Verify Existing User",
+          "Check Out",
           style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
@@ -40,8 +41,8 @@ class ExistingUserScreen extends StatelessWidget {
                 TextField(
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
-                    labelText: "Enter Phone Number",
-                    prefixIcon: const Icon(Icons.phone, color: Colors.green),
+                    labelText: "Enter Tag Number",
+                    prefixIcon: const Icon(Icons.tag, color: Colors.green),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -53,9 +54,9 @@ class ExistingUserScreen extends StatelessWidget {
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => VerifiedExistingUser()),
+                      MaterialPageRoute(builder: (context) =>  UserCheckout()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -66,7 +67,7 @@ class ExistingUserScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: const Text(
-                    "Verify",
+                    "Check out",
                     style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),

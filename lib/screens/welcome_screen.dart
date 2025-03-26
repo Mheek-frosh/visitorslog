@@ -1,54 +1,93 @@
 import 'package:flutter/material.dart';
+import 'check_out_screen.dart';
 import 'choice_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Welcome")),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Centered Image Asset
-            Image.asset(
-              'assets/images/moflogo.png',
-              width: 150,
-              height: 150,
-            ),
-            SizedBox(height: 20),
-
-            // Buttons Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildCustomButton(context, "Check In", () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChoiceScreen()));
-                }),
-                SizedBox(width: 20),
-                _buildCustomButton(context, "Check Out", () {
-                  // Checkout Logic
-                }),
-              ],
-            ),
-          ],
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // Removes the back arrow
+        backgroundColor: Colors.green[400], // Lighter green color
+        centerTitle: true, // Center the title
+        title: const Text(
+          "Visitors Management",
+          style: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         ),
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 40),
+
+          // ✅ Ministry Logo
+          Center(
+            child: Image.asset(
+              'assets/images/ministry-removebg-preview.png',
+              width: 250,
+              height: 250,
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // ✅ Caption text
+          const Center(
+            child: Text(
+              "Welcome to the Federal Ministry of Finance.",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          // ✅ Note text
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                "Note: For all new and existing users, please fill the form appropriately.",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, color: Colors.black54),
+              ),
+            ),
+          ),
+          const SizedBox(height: 30),
+
+          // ✅ Buttons Row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildCustomButton(context, "Check In", () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChoiceScreen()));
+              }),
+              _buildCustomButton(context, "Check Out", () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOutScreen()));
+              }),
+            ],
+          ),
+        ],
       ),
     );
   }
 
-  // Custom Button Widget
+  // ✅ Custom Button Widget
   Widget _buildCustomButton(BuildContext context, String text, VoidCallback onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.black, // White background
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), // Rounded corners
-        side: BorderSide(color: Colors.white), // White border
-      ),
-      child: Text(
-        text,
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), // White text
+    return SizedBox(
+      width: 140, // Increased button width
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green[400], // Lighter green color
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ), // Rounded corners
+          elevation: 5, // Slight elevation for a better look
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }

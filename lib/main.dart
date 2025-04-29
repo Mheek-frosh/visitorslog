@@ -7,7 +7,7 @@ import 'blocs/user_bloc.dart';
 void main() {
   runApp(
     DevicePreview(
-      enabled: false,
+      enabled: true,
       builder: (context) => BlocProvider(
         create: (_) => UserBloc(),
         child: MyApp(),
